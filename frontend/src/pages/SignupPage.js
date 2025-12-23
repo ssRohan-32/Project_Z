@@ -1,41 +1,114 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient'; // Ensure this points to correct path
 
 export default function SignupPage() {
   const [role, setRole] = useState('STUDENT');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     try {
-      await axios.post('http://127.0.0.1:8000/api/signup/', {
-        name, email, password, role
+      // 1. Sign up with Supabase Auth
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            full_name: name,
+            role: role
+          }
+        }
       });
-      alert('Signup successful! Please login.');
+
+      if (error) throw error;
+
+      alert('Signup successful! Check your email for verification.');
       navigate(`/login/${role.toLowerCase()}`);
-    } catch(err) {
+
+    } catch (err) {
       console.error(err);
-      alert(err.response?.data || 'Signup failed');
+      alert(err.message || 'Signup failed');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form onSubmit={handleSignup} className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">Sign Up</h1>
-        <input type="text" placeholder="Name" value={name} onChange={e=>setName(e.target.value)} className="mb-2 p-2 border rounded" required/>
-        <input type="email" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} className="mb-2 p-2 border rounded" required/>
-        <input type="password" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)} className="mb-2 p-2 border rounded" required/>
-        <select value={role} onChange={e=>setRole(e.target.value)} className="mb-4 p-2 border rounded w-full">
-          <option value="STUDENT">Student</option>
-          <option value="TEACHER">Teacher</option>
-        </select>
-        <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Sign Up</button>
-      </form>
+    <div className="container animate-fade-in" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+      <div className="card" style={{ width: '100%', maxWidth: '400px' }}>
+        <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem', textAlign: 'center' }}>Sign Up</h1>
+        <p style={{ textAlign: 'center', marginBottom: '2rem' }}>Create your account to get started.</p>
+
+        <form onSubmit={handleSignup} style={{ display: 'flex', flexDirection: 'column' }}>
+
+          <label style={{ marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Full Name</label>
+          <input
+            type="text"
+            placeholder="John Doe"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            className="input-field"
+            required
+          />
+
+          <label style={{ marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Email Address</label>
+          <input
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            className="input-field"
+            required
+          />
+
+          <label style={{ marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Password</label>
+          <input
+            type="password"
+            placeholder="••••••••"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            className="input-field"
+            required
+          />
+
+          <label style={{ marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>I am a...</label>
+          <select
+            value={role}
+            onChange={e => setRole(e.target.value)}
+            className="input-field"
+            style={{ appearance: 'none', cursor: 'pointer' }} // Add custom select styling if needed
+          >
+            <option value="STUDENT" style={{ color: 'black' }}>Student</option>
+            <option value="TEACHER" style={{ color: 'black' }}>Teacher</option>
+          </select>
+
+          <button
+            type="submit"
+            className="btn btn-primary"
+            style={{ marginTop: '1rem' }}
+            disabled={loading}
+          >
+            {loading ? 'Creating Account...' : 'Sign Up'}
+          </button>
+        </form>
+
+        <p style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem' }}>
+          Already have an account?{' '}
+          <span
+            onClick={() => navigate(`/login/${role.toLowerCase()}`)}
+            style={{ color: 'var(--accent-primary)', cursor: 'pointer', fontWeight: '600' }}
+          >
+            Log In
+          </span>
+        </p>
+      </div>
     </div>
   );
 }

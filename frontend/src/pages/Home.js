@@ -28,13 +28,7 @@ export default function Home() {
             Enter as Teacher
           </button>
 
-          <button
-            onClick={() => navigate('/test-crud')}
-            className="btn btn-outline"
-            style={{ borderColor: 'var(--accent-secondary)', color: 'var(--accent-secondary)' }}
-          >
-            Test Supabase CRUD
-          </button>
+
         </div>
 
         <p style={{ marginTop: '2rem', fontSize: '0.9rem' }}>

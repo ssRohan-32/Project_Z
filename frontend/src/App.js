@@ -13,7 +13,6 @@ import CoursePage from './pages/CoursePage';
 import FormPage from './pages/FormPage';
 import GradesheetPage from './pages/GradesheetPage';
 import FolderPage from './pages/FolderPage';
-import TestSupabase from './TestSupabase';
 
 function App() {
   return (
@@ -30,7 +29,6 @@ function App() {
             <Route path="/form/:sectionId" element={<FormPage />} />
             <Route path="/gradesheet/:sectionId" element={<GradesheetPage />} />
             <Route path="/folder/:sectionId/:folderType" element={<FolderPage />} />
-            <Route path="/test-crud" element={<TestSupabase />} />
           </Routes>
         </main>
       </Router>
