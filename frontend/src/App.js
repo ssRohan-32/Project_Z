@@ -1,6 +1,7 @@
 // src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css'; // Import modern styles
 
 // Import your pages
 import Home from './pages/Home';
@@ -16,20 +17,24 @@ import TestSupabase from './TestSupabase';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login/:role" element={<Login />} />
-        <Route path="/student/dashboard" element={<StudentDashboard />} />
-        <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
-        <Route path="/course/:courseId" element={<CoursePage />} />
-        <Route path="/form/:sectionId" element={<FormPage />} />
-        <Route path="/gradesheet/:sectionId" element={<GradesheetPage />} />
-        <Route path="/folder/:sectionId/:folderType" element={<FolderPage />} />
-        <Route path="/test-crud" element={<TestSupabase />} />
-      </Routes>
-    </Router>
+    <div className="App">
+      <Router>
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/login/:role" element={<Login />} />
+            <Route path="/student/dashboard" element={<StudentDashboard />} />
+            <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
+            <Route path="/course/:courseId" element={<CoursePage />} />
+            <Route path="/form/:sectionId" element={<FormPage />} />
+            <Route path="/gradesheet/:sectionId" element={<GradesheetPage />} />
+            <Route path="/folder/:sectionId/:folderType" element={<FolderPage />} />
+            <Route path="/test-crud" element={<TestSupabase />} />
+          </Routes>
+        </main>
+      </Router>
+    </div>
   );
 }
 

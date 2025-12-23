@@ -5,36 +5,43 @@ export default function Home() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold mb-8">Welcome to Portal</h1>
+    <div className="container animate-fade-in" style={{ textAlign: 'center', marginTop: '10vh' }}>
+      <div className="card" style={{ maxWidth: '600px', margin: '0 auto' }}>
+        <h1 style={{ marginBottom: '1.5rem' }}>Portal</h1>
+        <p style={{ marginBottom: '2.5rem', fontSize: '1.2rem' }}>
+          Welcome to the future of student management. <br />
+          Secure, fast, and built for you.
+        </p>
 
-      <div className="flex flex-col gap-4">
-        <button
-          onClick={() => navigate('/login/student')}
-          className="px-6 py-2 bg-blue-500 text-white rounded"
-        >
-          Enter as Student
-        </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'stretch', maxWidth: '300px', margin: '0 auto' }}>
+          <button
+            onClick={() => navigate('/login/student')}
+            className="btn btn-primary"
+          >
+            Enter as Student
+          </button>
 
-        <button
-          onClick={() => navigate('/login/teacher')}
-          className="px-6 py-2 bg-green-500 text-white rounded"
-        >
-          Enter as Teacher
-        </button>
+          <button
+            onClick={() => navigate('/login/teacher')}
+            className="btn btn-outline"
+          >
+            Enter as Teacher
+          </button>
 
-        <button
-          onClick={() => navigate('/test-crud')}
-          className="px-6 py-2 bg-purple-500 text-white rounded"
-        >
-          Test Supabase CRUD
-        </button>
+          <button
+            onClick={() => navigate('/test-crud')}
+            className="btn btn-outline"
+            style={{ borderColor: 'var(--accent-secondary)', color: 'var(--accent-secondary)' }}
+          >
+            Test Supabase CRUD
+          </button>
+        </div>
 
-        <p className="mt-4 text-gray-600 text-center">
+        <p style={{ marginTop: '2rem', fontSize: '0.9rem' }}>
           Don’t have an account?{' '}
           <span
-            className="text-blue-500 cursor-pointer"
             onClick={() => navigate('/signup')}
+            style={{ color: 'var(--accent-primary)', cursor: 'pointer', fontWeight: '600' }}
           >
             Sign Up
           </span>
