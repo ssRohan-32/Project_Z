@@ -29,7 +29,7 @@ export default function SignupPage() {
 
       if (error) throw error;
 
-      alert('Signup successful! Check your email for verification.');
+      alert('Signup successful!');
       navigate(`/login/${role.toLowerCase()}`);
 
     } catch (err) {
