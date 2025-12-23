@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function StudentDashboard() {
@@ -7,9 +6,18 @@ export default function StudentDashboard() {
   const [sectionCode, setSectionCode] = useState('');
   const navigate = useNavigate();
 
+  // TODO: Migrate to Supabase
   // Fetch enrolled courses on component mount
   useEffect(() => {
     const fetchCourses = async () => {
+      // Placeholder data
+      setCourses([
+        { id: 1, c_name: 'Introduction to React' },
+        { id: 2, c_name: 'Advanced Supabase' }
+      ]);
+
+      /* 
+      // Legacy Backend Call - REMOVED
       try {
         const res = await axios.get('http://127.0.0.1:8000/api/student/courses/', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
@@ -19,11 +27,14 @@ export default function StudentDashboard() {
         console.error(err);
         alert('Failed to fetch courses');
       }
+      */
     };
     fetchCourses();
-  }, []); // empty dependency array to run once
+  }, []);
 
   const handleEnroll = async () => {
+    alert("Enrollment logic needs migration to Supabase.");
+    /*
     try {
       await axios.post('http://127.0.0.1:8000/api/student/enroll/', 
         { code: sectionCode }, 
@@ -31,45 +42,46 @@ export default function StudentDashboard() {
       );
       alert('Enrolled successfully');
       setSectionCode('');
-      // Refresh courses after enrollment
-      const res = await axios.get('http://127.0.0.1:8000/api/student/courses/', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
-      setCourses(res.data);
+      // Refresh courses...
     } catch(err) {
       console.error(err);
       alert('Enroll failed');
     }
+    */
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">My Courses</h1>
-      <div className="flex mb-4">
-        <input 
-          type="text" 
-          value={sectionCode} 
-          onChange={e => setSectionCode(e.target.value)} 
-          placeholder="Enter Section Code" 
-          className="border p-2 mr-2"
-        />
-        <button 
-          onClick={handleEnroll} 
-          className="px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Enroll
-        </button>
-      </div>
-      <div className="grid grid-cols-3 gap-4">
-        {courses.map(c => (
-          <div 
-            key={c.id} 
-            className="border p-4 rounded cursor-pointer hover:bg-gray-100"
-            onClick={() => navigate(`/course/${c.id}`)}
+    <div className="container animate-fade-in" style={{ marginTop: '20px' }}>
+      <div className="card">
+        <h1 style={{ marginBottom: '1.5rem' }}>My Courses</h1>
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '2rem' }}>
+          <input
+            type="text"
+            value={sectionCode}
+            onChange={e => setSectionCode(e.target.value)}
+            placeholder="Enter Section Code"
+            className="input-field"
+            style={{ marginBottom: 0 }}
+          />
+          <button
+            onClick={handleEnroll}
+            className="btn btn-primary"
           >
-            {c.c_name}
-          </div>
-        ))}
+            Enroll
+          </button>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
+          {courses.map(c => (
+            <div
+              key={c.id}
+              className="card"
+              style={{ cursor: 'pointer', padding: '20px', textAlign: 'center', background: 'var(--bg-secondary)' }}
+              onClick={() => navigate(`/course/${c.id}`)}
+            >
+              <h3 style={{ margin: 0 }}>{c.c_name}</h3>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

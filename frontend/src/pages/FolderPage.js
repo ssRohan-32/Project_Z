@@ -1,34 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 
 export default function FolderPage() {
-  const { sectionId, folderType } = useParams();
+  const { folderType } = useParams();
   const [links, setLinks] = useState([]);
   const [newLink, setNewLink] = useState('');
 
   useEffect(() => {
-    axios.get(`/api/materials/${sectionId}/${folderType}/`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }})
-      .then(res => setLinks(res.data))
-      .catch(console.error);
-  }, [sectionId, folderType]);
+    // Placeholder Data
+    setLinks([
+      { path: 'https://example.com/resource-1' },
+      { path: 'https://example.com/resource-2' }
+    ]);
+  }, [folderType]);
 
   const handleAdd = async () => {
-    try {
-      await axios.post('/api/materials/', { section: sectionId, type: folderType, path: newLink }, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }});
-      setLinks([...links, { path: newLink }]);
-      setNewLink('');
-    } catch(err) { console.error(err); alert('Failed'); }
+    if (!newLink) return;
+    setLinks([...links, { path: newLink }]);
+    setNewLink('');
+    alert("This link is saved locally for now. Backend storage coming soon.");
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">{folderType} Links</h1>
-      <ul className="mb-4">
-        {links.map((l, i) => <li key={i} className="mb-1"><a href={l.path} target="_blank">{l.path}</a></li>)}
-      </ul>
-      <input type="text" value={newLink} onChange={e => setNewLink(e.target.value)} placeholder="Add new link" className="border p-2 mr-2"/>
-      <button onClick={handleAdd} className="px-4 py-2 bg-blue-500 text-white rounded">Add</button>
+    <div className="container animate-fade-in" style={{ marginTop: '20px' }}>
+      <div className="card">
+        <h1 style={{ marginBottom: '1.5rem', textTransform: 'capitalize' }}>{folderType} Links</h1>
+
+        <div style={{ marginBottom: '2rem' }}>
+          {links.length === 0 && <p>No links found.</p>}
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            {links.map((l, i) => (
+              <li key={i} style={{ marginBottom: '10px', padding: '10px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)' }}>
+                <a href={l.path} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-secondary)', textDecoration: 'none' }}>
+                  {l.path}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <input
+            type="text"
+            value={newLink}
+            onChange={e => setNewLink(e.target.value)}
+            placeholder="Add new link (e.g. https://...)"
+            className="input-field"
+            style={{ marginBottom: 0 }}
+          />
+          <button onClick={handleAdd} className="btn btn-primary">Add</button>
+        </div>
+      </div>
     </div>
   );
 }

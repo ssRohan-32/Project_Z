@@ -2,33 +2,38 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import axios from 'axios';
 
 export default function FormPage() {
+  // eslint-disable-next-line no-unused-vars
   const { sectionId } = useParams();
   const [reason, setReason] = useState('');
+  // eslint-disable-next-line no-unused-vars
   const [attachment, setAttachment] = useState(null);
 
   const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append('section', sectionId);
-    formData.append('form_type', 'MISSING_QUIZ');
-    formData.append('reason', reason);
-    if(attachment) formData.append('attachment', attachment);
-
-    try {
-      await axios.post('/api/forms/', formData, { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'multipart/form-data' }});
-      alert('Form submitted');
-      setReason(''); setAttachment(null);
-    } catch(err){ console.error(err); alert('Submit failed'); }
+    alert("Form submission logic needs migration to Supabase.");
+    setReason('');
+    setAttachment(null);
   };
 
   return (
-    <div className="p-4 max-w-3xl mx-auto">
-      <h2 className="text-xl font-bold mb-4">Submit Form</h2>
-      <ReactQuill value={reason} onChange={setReason} className="mb-4"/>
-      <input type="file" onChange={e => setAttachment(e.target.files[0])} className="mb-4"/>
-      <button onClick={handleSubmit} className="px-4 py-2 bg-blue-500 text-white rounded">Submit</button>
+    <div className="container animate-fade-in" style={{ marginTop: '20px' }}>
+      <div className="card" style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <h2 style={{ marginBottom: '1.5rem' }}>Submit Form</h2>
+
+        <div style={{ marginBottom: '1.5rem', background: 'white', color: 'black', borderRadius: '4px' }}>
+          <ReactQuill theme="snow" value={reason} onChange={setReason} />
+        </div>
+
+        <input
+          type="file"
+          onChange={e => setAttachment(e.target.files[0])}
+          className="input-field"
+          style={{ cursor: 'pointer' }}
+        />
+
+        <button onClick={handleSubmit} className="btn btn-primary">Submit</button>
+      </div>
     </div>
   );
 }

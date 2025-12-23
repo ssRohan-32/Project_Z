@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function TeacherDashboard() {
   const [sections, setSections] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [selectedSection, setSelectedSection] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch teacher's enrolled sections
+    // Placeholder Data
+    setSections([
+      { id: 1, course_name: 'CS101', sec_no: 'A' },
+      { id: 2, course_name: 'CS102', sec_no: 'B' }
+    ]);
+    setSelectedSection(1);
+
+    /*
+    // Legacy Backend Call
     axios.get('/api/teacher/sections/', {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     })
@@ -17,6 +25,7 @@ export default function TeacherDashboard() {
         if(res.data.length > 0) setSelectedSection(res.data[0].id);
       })
       .catch(console.error);
+    */
   }, []);
 
   const handleSectionChange = (e) => {
@@ -24,6 +33,8 @@ export default function TeacherDashboard() {
   };
 
   const handleGenerateInvite = async () => {
+    alert("Invite generation logic needs migration to Supabase.");
+    /*
     try {
       const res = await axios.post(`/api/teacher/sections/${selectedSection}/generate_invite/`, {}, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
@@ -33,34 +44,48 @@ export default function TeacherDashboard() {
       console.error(err);
       alert('Failed to generate invite code');
     }
+    */
   };
 
   const handleOpenCourse = () => {
-    if(selectedSection) navigate(`/course/${selectedSection}`);
+    if (selectedSection) navigate(`/course/${selectedSection}`);
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Teacher Dashboard</h1>
-      
-      {/* Section Dropdown */}
-      <div className="flex items-center mb-4">
-        <select value={selectedSection || ''} onChange={handleSectionChange} className="border p-2 mr-2">
-          {sections.map(s => (
-            <option key={s.id} value={s.id}>{s.course_name} - {s.sec_no}</option>
-          ))}
-        </select>
-        <button onClick={handleGenerateInvite} className="px-4 py-2 bg-blue-500 text-white rounded mr-2">Generate Invite</button>
-        <button onClick={handleOpenCourse} className="px-4 py-2 bg-green-500 text-white rounded">Open Section</button>
-      </div>
+    <div className="container animate-fade-in" style={{ marginTop: '20px' }}>
+      <div className="card">
+        <h1 style={{ marginBottom: '1.5rem' }}>Teacher Dashboard</h1>
 
-      {/* Sections Table (Optional, for quick access) */}
-      <div className="grid grid-cols-3 gap-4">
-        {sections.map(s => (
-          <div key={s.id} className="border p-4 rounded cursor-pointer" onClick={() => navigate(`/course/${s.id}`)}>
-            {s.course_name} - {s.sec_no}
-          </div>
-        ))}
+        {/* Section Dropdown */}
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap' }}>
+          <select
+            value={selectedSection || ''}
+            onChange={handleSectionChange}
+            className="input-field"
+            style={{ marginBottom: 0, width: 'auto', minWidth: '200px', cursor: 'pointer', appearance: 'none', color: 'black' }}
+          >
+            {sections.map(s => (
+              <option key={s.id} value={s.id}>{s.course_name} - {s.sec_no}</option>
+            ))}
+          </select>
+          <button onClick={handleGenerateInvite} className="btn btn-outline">Generate Invite</button>
+          <button onClick={handleOpenCourse} className="btn btn-primary">Open Section</button>
+        </div>
+
+        {/* Sections Table (Optional, for quick access) */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
+          {sections.map(s => (
+            <div
+              key={s.id}
+              className="card"
+              style={{ cursor: 'pointer', padding: '20px', textAlign: 'center', background: 'var(--bg-secondary)' }}
+              onClick={() => navigate(`/course/${s.id}`)}
+            >
+              <h3 style={{ margin: 0 }}>{s.course_name}</h3>
+              <p style={{ margin: '5px 0 0 0', color: 'var(--text-secondary)' }}>Section {s.sec_no}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
